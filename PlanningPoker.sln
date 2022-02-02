@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanningPoker.Api", "PlanningPoker.Api\PlanningPoker.Api.csproj", "{7528B37E-132D-47EA-9285-49D554D4109C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlanningPoker.Core", "PlanningPoker.Core\PlanningPoker.Core.csproj", "{217813A6-D602-4984-A5B1-158A27BD0008}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7528B37E-132D-47EA-9285-49D554D4109C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7528B37E-132D-47EA-9285-49D554D4109C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7528B37E-132D-47EA-9285-49D554D4109C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7528B37E-132D-47EA-9285-49D554D4109C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{217813A6-D602-4984-A5B1-158A27BD0008}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{217813A6-D602-4984-A5B1-158A27BD0008}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{217813A6-D602-4984-A5B1-158A27BD0008}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{217813A6-D602-4984-A5B1-158A27BD0008}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6FA3F41-6DFA-4FE0-82AD-070826180A1C}
+	EndGlobalSection
+EndGlobal
