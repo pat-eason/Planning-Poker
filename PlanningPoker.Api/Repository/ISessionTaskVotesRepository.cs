@@ -2,7 +2,7 @@
 
 namespace PlanningPoker.Api.Repository
 {
-    public interface ISessionsRepository : IRepositoryBase<Session>
+    public interface ISessionTaskVotesRepository : IRepositoryBase<SessionTaskVote>
     {
     }
 }

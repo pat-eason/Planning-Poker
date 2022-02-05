@@ -44,8 +44,43 @@ namespace PlanningPoker.Api.Repository
             return session;
         }
 
-        protected static string ConvertPasswordToMD5(string inputPassword)
+        public async Task<Session?> GetOneAsync(Guid id)
         {
+            var session = await _dbContext.Sessions.FindAsync(id);                
+            return session;
+        }
+
+        public async Task<Session> UpdateAsync(Session entity)
+        {
+            entity.Password = ConvertPasswordToMD5(entity.Password);
+            entity.UpdatedAt = DateTimeOffset.UtcNow;
+            _dbContext.Sessions.Update(entity);
+            await _dbContext.SaveChangesAsync();
+            return entity;
+        }
+
+        public async Task DeleteAsync(Session session)
+        {
+            _dbContext.Sessions.Remove(session);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var session = await _dbContext.Sessions.FindAsync(id);
+            if (session != null)
+            {
+                await DeleteAsync(session);
+            }
+        }
+
+        protected static string? ConvertPasswordToMD5(string inputPassword)
+        {
+            if (string.IsNullOrEmpty(inputPassword))
+            {
+                return null;
+            }
+
             using HashAlgorithm algorithm = SHA256.Create();
             var md5Bytes = algorithm.ComputeHash(Encoding.UTF8.GetBytes(inputPassword));
 

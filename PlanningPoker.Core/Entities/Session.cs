@@ -1,10 +1,19 @@
-﻿namespace PlanningPoker.Core.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PlanningPoker.Core.Entities
 {
     public class Session : EntityBase
     {
-        public string Name { get; set; } = "";
-        public bool IsPrivate { get; set; } = false;
-        public string Password { get; set; } = "";
+        [Required]
+        public string Name { get; set; }
+
+        public bool IsPrivate { get; set; }
+
+        public string? Password { get; set; }
+        
+        [Required]
+        [EmailAddress]
+        public string CreatedBy { get; set; }
 
         public virtual List<SessionTask> SessionTasks { get; set; }
     }
