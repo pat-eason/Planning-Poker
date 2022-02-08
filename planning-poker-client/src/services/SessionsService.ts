@@ -1,25 +1,24 @@
-const { VUE_APP_API_BASE } = process.env;
+import {
+  KeyValueType,
+  get,
+  post,
+} from "./http-client";
+import CreateSessionModel from "@/types/CreateSessionModel";
+import SessionEntity from '@/types/api/SessionEntity';
 
-const generateUrl = (requestUrl: string): string => {
-  console.log(process.env);
-  console.log('generateUrl', VUE_APP_API_BASE, requestUrl);
-  const url = new URL(VUE_APP_API_BASE);
-  url.pathname = requestUrl;
-  return url.href;
-}
+const create = async (model: CreateSessionModel): Promise<SessionEntity> => {
+  const response = await post<SessionEntity>("sessions", model as KeyValueType);
+  return response.data;
+};
 
-const getAll = async<T> (): Promise<T> => {
-  const response = await fetch(
-    generateUrl('/api/test/'),
-    {
-      headers: { type: 'application/json' },
-      method: 'GET',
-    });
-  return response.json();
-}
+const retrieveById = async (sessionId: string): Promise<SessionEntity> => {
+  const response = await get<SessionEntity>(`sessions/${sessionId}`);
+  return response.data;
+};
 
 const sessionsService = {
-  getAll,
+  create,
+  retrieveById,
 };
 
 export default sessionsService;

@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
 import Home from "@/views/Home.vue";
+import SessionView from '@/views/SessionView.vue';
 
 Vue.use(VueRouter);
 
@@ -12,8 +13,9 @@ const routes: Array<RouteConfig> = [
     component: Home,
   },
   {
-    path: "/:id",
+    path: "/:sessionId",
     name: "Session",
+    component: SessionView,
   },
 ];
 

@@ -33,10 +33,13 @@ namespace PlanningPoker.Api.Repository
             session.Id = Guid.NewGuid();
             session.CreatedAt = DateTimeOffset.UtcNow;
             session.UpdatedAt = DateTimeOffset.UtcNow;
-            var md5Password = ConvertPasswordToMD5(session.Password);
-            if (!string.IsNullOrEmpty(md5Password))
+            if (session.IsPrivate)
             {
-                session.Password = md5Password;
+                var md5Password = ConvertPasswordToMD5(session.Password);
+                if (!string.IsNullOrEmpty(md5Password))
+                {
+                    session.Password = md5Password;
+                }
             }
 
             await _dbContext.Sessions.AddAsync(session);
@@ -50,13 +53,16 @@ namespace PlanningPoker.Api.Repository
             return session;
         }
 
-        public async Task<Session> UpdateAsync(Session entity)
+        public async Task<Session> UpdateAsync(Session session)
         {
-            entity.Password = ConvertPasswordToMD5(entity.Password);
-            entity.UpdatedAt = DateTimeOffset.UtcNow;
-            _dbContext.Sessions.Update(entity);
+            if (session.IsPrivate)
+            {
+                session.Password = ConvertPasswordToMD5(session.Password);
+            }
+            session.UpdatedAt = DateTimeOffset.UtcNow;
+            _dbContext.Sessions.Update(session);
             await _dbContext.SaveChangesAsync();
-            return entity;
+            return session;
         }
 
         public async Task DeleteAsync(Session session)
