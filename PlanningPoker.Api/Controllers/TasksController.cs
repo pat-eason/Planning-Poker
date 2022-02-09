@@ -1,17 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PlanningPoker.Api.Repository;
+using PlanningPoker.Api.ViewModels.Request;
+using PlanningPoker.Core.Entities;
 
 namespace PlanningPoker.Api.Controllers
 {
     public class TasksController : ApiControllerV1Base
     {
+        private readonly ISessionsRepository _sessionsRepository;
         private readonly ISessionTasksRepository _sessionTasksRepository;
 
         public TasksController(
             ILogger<TasksController> logger,
+            ISessionsRepository sessionsRepository,
             ISessionTasksRepository sessionTasksRepository
         ) : base(logger)
         {
+            _sessionsRepository = sessionsRepository;
             _sessionTasksRepository = sessionTasksRepository;
         }
 
@@ -23,9 +28,23 @@ namespace PlanningPoker.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(CreateSessionTaskRequest request)
         {
-            return OkResponseEnvelope("test");
+            var session = await _sessionsRepository.GetOneAsync(request.SessionId);
+            if (session == null)
+            {
+                return NotFound($"Could not find Session with Id {request.SessionId}");
+            }
+
+            var sessionTask = new SessionTask
+            {
+                CreatedBy = request.Email,
+                Name = request.Name,
+                Session = session,
+            };
+
+            var createdSessionTask = await _sessionTasksRepository.CreateAsync(sessionTask);
+            return OkResponseEnvelope(createdSessionTask);
         }
 
         [HttpPut]
@@ -40,7 +59,7 @@ namespace PlanningPoker.Api.Controllers
             var sessionTask = await _sessionTasksRepository.GetOneAsync(id);
             if (sessionTask == null)
             {
-                return NotFound();
+                return NotFound($"Could not find Session with Id {id}");
             }
             return OkResponseEnvelope(sessionTask);
         }

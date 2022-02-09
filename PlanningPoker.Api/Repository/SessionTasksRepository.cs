@@ -48,6 +48,18 @@ namespace PlanningPoker.Api.Repository
             return await _dbContext.SessionTasks.ToListAsync();
         }
 
+        public async Task<SessionTask?> GetCurrentTaskAsync(Session session)
+        {
+            return await GetCurrentTaskAsync(session.Id);
+        }
+
+        public async Task<SessionTask?> GetCurrentTaskAsync(Guid sessionId)
+        {
+            return await _dbContext.SessionTasks
+                .OrderByDescending(x => x.CreatedAt)
+                .FirstOrDefaultAsync(x => x.SessionId == sessionId && !x.IsCompleted);
+        }
+
         public async Task<SessionTask?> GetOneAsync(Guid id)
         {
             return await _dbContext.SessionTasks.FindAsync(id);

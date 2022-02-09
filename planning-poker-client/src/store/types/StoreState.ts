@@ -1,4 +1,5 @@
-import SessionEntity from '@/types/api/SessionEntity';
+import SessionEntity from "@/types/api/SessionEntity";
+import SessionTaskEntity from "@/types/api/SessionTaskEntity";
 
 type NullableEntity<T> = T | null;
 
@@ -8,7 +9,9 @@ export interface ApiTransactionType<T> {
   data: NullableEntity<T>;
 }
 
-export const generateDefaultTransactionState = <T>(): ApiTransactionType<T> => ({
+export const generateDefaultTransactionState = <
+  T
+>(): ApiTransactionType<T> => ({
   error: null,
   isLoading: false,
   data: null,
@@ -21,6 +24,8 @@ export interface StoreStateUser {
 
 export default interface StoreState {
   createSession: ApiTransactionType<SessionEntity>;
+  createSessionTask: ApiTransactionType<SessionTaskEntity>;
   currentSession: ApiTransactionType<SessionEntity>;
-  user: StoreStateUser,
+  currentSessionTask: ApiTransactionType<SessionTaskEntity>;
+  user: StoreStateUser;
 }

@@ -8,13 +8,19 @@ namespace PlanningPoker.Api.Controllers
     public class SessionsController : ApiControllerV1Base
     {
         private readonly ISessionsRepository _sessionsRepository;
+        private readonly ISessionTasksRepository _sessionTasksRepository;
+        private readonly ISessionTaskVotesRepository _sessionTaskVotesRepository;
 
         public SessionsController(
             ILogger<SessionsController> logger,
-            ISessionsRepository sessionsRepository
+            ISessionsRepository sessionsRepository,
+            ISessionTasksRepository sessionTasksRepository,
+            ISessionTaskVotesRepository sessionTaskVotesRepository
         ) : base(logger)
         {
             _sessionsRepository = sessionsRepository;
+            _sessionTasksRepository = sessionTasksRepository;
+            _sessionTaskVotesRepository = sessionTaskVotesRepository;
         }
 
         [HttpGet]
@@ -62,6 +68,30 @@ namespace PlanningPoker.Api.Controllers
                 return NotFound();
             }
             return OkResponseEnvelope(session);
+        }
+
+        [HttpPost("vote/{id:Guid}")]
+        public async Task<IActionResult> Vote(VoteForTaskRequest request, Guid id)
+        {
+            var session = await _sessionsRepository.GetOneAsync(id);
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            var currentSessionTask = await _sessionTasksRepository.GetCurrentTaskAsync(session);
+            if (currentSessionTask == null)
+            {
+                return NotFound("Could not find Task to cast Vote for");
+            }
+
+            await _sessionTaskVotesRepository.CreateOrUpdateVoteForSessionTask(
+                currentSessionTask,
+                request.Email,
+                request.Value
+            );
+
+            return NoContent();
         }
     }
 }

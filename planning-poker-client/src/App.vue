@@ -1,22 +1,9 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <v-toolbar-title>
-        Planning Poker
-      </v-toolbar-title>
-
-      <v-spacer />
-
-      <v-avatar
-        v-if='userIsConfigured'
-        color="secondary"
-        size="46">
-        {{userInitials}}
-      </v-avatar>
-    </v-app-bar>
+    <Toolbar />
 
     <v-main>
-      <router-view v-if='userIsConfigured' />
+      <router-view v-if="userIsConfigured" />
       <v-container v-else>
         <v-card :maxWidth="360" class="mx-auto">
           <ConfigureUserForm />
@@ -35,21 +22,19 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 
-import ConfigureUserForm from '@/components/ConfigureUserForm.vue';
-import GetterType from '@/store/types/GetterType';
+import ConfigureUserForm from "@/components/ConfigureUserForm.vue";
+import Toolbar from "@/components/Toolbar.vue";
+import GetterType from "@/store/types/GetterType";
 
 @Component({
   components: {
     ConfigureUserForm,
+    Toolbar,
   },
 })
 export default class App extends Vue {
   get copyrightYear(): number {
     return new Date().getFullYear();
-  }
-
-  get userInitials(): string {
-    return this.$store.getters[GetterType.USER_INITIALS];
   }
 
   get userIsConfigured(): boolean {

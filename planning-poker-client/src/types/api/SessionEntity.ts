@@ -1,4 +1,4 @@
-import EntityBase from './EntityBase';
+import EntityBase from "./EntityBase";
 
 export default interface SessionEntity extends EntityBase {
   createdBy: string;

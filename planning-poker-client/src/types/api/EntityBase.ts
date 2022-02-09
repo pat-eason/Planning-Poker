@@ -1,5 +1,5 @@
 export default interface EntityBase {
-  createdAt: Date,
+  createdAt: Date;
   id: string;
   updatedAt: Date;
 }

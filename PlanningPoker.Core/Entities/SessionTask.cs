@@ -12,6 +12,10 @@ namespace PlanningPoker.Core.Entities
         [EmailAddress]
         public string CreatedBy { get; set; }
 
+        public bool IsCompleted { get; set; }
+
+        public DateTimeOffset CompletedAt { get; set; }
+
         public Guid SessionId { get; set; }
         public virtual Session Session { get; set; }
     }

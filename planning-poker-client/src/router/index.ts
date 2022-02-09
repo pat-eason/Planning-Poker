@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
 import Home from "@/views/Home.vue";
-import SessionView from '@/views/SessionView.vue';
+import SessionView from "@/views/SessionView.vue";
 
 Vue.use(VueRouter);
 

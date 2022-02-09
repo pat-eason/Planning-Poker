@@ -1,10 +1,6 @@
-import {
-  KeyValueType,
-  get,
-  post,
-} from "./http-client";
+import { KeyValueType, get, post } from "./http-client";
 import CreateSessionModel from "@/types/CreateSessionModel";
-import SessionEntity from '@/types/api/SessionEntity';
+import SessionEntity from "@/types/api/SessionEntity";
 
 const create = async (model: CreateSessionModel): Promise<SessionEntity> => {
   const response = await post<SessionEntity>("sessions", model as KeyValueType);

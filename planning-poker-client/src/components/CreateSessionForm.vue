@@ -34,7 +34,7 @@ import CreateSessionModel from "@/types/CreateSessionModel";
 @Component
 export default class CreateSessionForm extends Vue {
   model: CreateSessionModel = {
-    email: 'test@test.com', // @TODO replace with store state
+    email: "test@test.com", // @TODO replace with store state
     isPrivate: false,
     name: "",
     password: "",

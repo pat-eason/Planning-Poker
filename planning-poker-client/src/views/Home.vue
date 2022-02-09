@@ -1,9 +1,7 @@
 <template>
   <v-container>
     <v-card elevation="2">
-      <v-card-title>
-        Start a new Session
-      </v-card-title>
+      <v-card-title> Start a new Session </v-card-title>
       <v-card-text>
         <CreateSessionForm @submit-form="createSession" />
       </v-card-text>
@@ -12,9 +10,7 @@
         <hr />
       </v-card-text>
 
-      <v-card-title>
-        Join an existing Session
-      </v-card-title>
+      <v-card-title> Join an existing Session </v-card-title>
       <v-card-text>
         <JoinSessionForm @submit-form="joinSession" />
       </v-card-text>
@@ -30,7 +26,7 @@ import CreateSessionModel from "@/types/CreateSessionModel";
 import JoinSessionForm from "@/components/JoinSessionForm.vue";
 import JoinSessionModel from "@/types/JoinSessionModel";
 
-import ActionType from '@/store/types/ActionType';
+import ActionType from "@/store/types/ActionType";
 
 @Component({
   components: {

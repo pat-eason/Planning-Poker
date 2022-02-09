@@ -7,11 +7,14 @@ import Router from '@/router';
 import sessionsService from '@/services/SessionsService';
 import CreateSessionModel from '@/types/CreateSessionModel';
 import UserModel from '@/types/UserModel';
+import CreateSessionTaskModel from '@/types/CreateSessionTaskModel';
+import sessionTasksService from '@/services/SessionTasksService';
 
 type StoreActionContext = ActionContext<StoreState, StoreState>;
 
 export interface Actions {
   [ActionType.CREATE_SESSION](context: StoreActionContext, payload: CreateSessionModel): Promise<void>;
+  [ActionType.CREATE_SESSION_TASK](context: StoreActionContext, payload: CreateSessionTaskModel): Promise<void>;
   [ActionType.RETRIEVE_SESSION_BY_ID](context: StoreActionContext, sessionId: string): Promise<void>;
   [ActionType.SET_USER](context: StoreActionContext, payload: UserModel): void;
 }
@@ -42,6 +45,18 @@ const createSession = async (context: StoreActionContext, payload: CreateSession
   );
 }
 
+const createSessionTask = async (context: StoreActionContext, payload: CreateSessionTaskModel): Promise<void> => {
+  await executeApiRequest(
+    context,
+    MutationType.SET_CREATE_SESSION_TASK_LOADING,
+    MutationType.SET_CREATE_SESSION_TASK_ERROR,
+    async () => {
+      const response = await sessionTasksService.create(payload);
+      context.commit(MutationType.SET_CURRENT_SESSION_TASK, response);
+    },
+  );
+}
+
 const retrieveSessionById = async (context: StoreActionContext, sessionId: string): Promise<void> => {
   await executeApiRequest(
     context,
@@ -61,6 +76,7 @@ const setUser = (context: StoreActionContext, payload: UserModel): void => {
 
 const actions: ActionTree<StoreState, StoreState> & Actions = {
   [ActionType.CREATE_SESSION]: createSession,
+  [ActionType.CREATE_SESSION_TASK]: createSessionTask,
   [ActionType.RETRIEVE_SESSION_BY_ID]: retrieveSessionById,
   [ActionType.SET_USER]: setUser,
 };
