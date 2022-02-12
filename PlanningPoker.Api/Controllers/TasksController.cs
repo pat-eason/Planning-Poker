@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using PlanningPoker.Api.Hubs;
 using PlanningPoker.Api.Repository;
 using PlanningPoker.Api.ViewModels.Request;
 using PlanningPoker.Core.Entities;
@@ -9,15 +11,18 @@ namespace PlanningPoker.Api.Controllers
     {
         private readonly ISessionsRepository _sessionsRepository;
         private readonly ISessionTasksRepository _sessionTasksRepository;
+        private readonly IHubContext<SessionHub> _sessionHubContext;
 
         public TasksController(
             ILogger<TasksController> logger,
             ISessionsRepository sessionsRepository,
-            ISessionTasksRepository sessionTasksRepository
+            ISessionTasksRepository sessionTasksRepository,
+            IHubContext<SessionHub> sessionHubContext
         ) : base(logger)
         {
             _sessionsRepository = sessionsRepository;
             _sessionTasksRepository = sessionTasksRepository;
+            _sessionHubContext = sessionHubContext;
         }
 
         [HttpGet]
@@ -44,6 +49,16 @@ namespace PlanningPoker.Api.Controllers
             };
 
             var createdSessionTask = await _sessionTasksRepository.CreateAsync(sessionTask);
+
+            await _sessionHubContext.Clients.Group($"session_{createdSessionTask.SessionId}").SendAsync(
+                SessionHubEvents.RECEIVE_SESSION_TASK,
+                new 
+                {
+                    Id = createdSessionTask.Id,
+                    Name = createdSessionTask.Name,
+                }
+            );
+
             return OkResponseEnvelope(createdSessionTask);
         }
 

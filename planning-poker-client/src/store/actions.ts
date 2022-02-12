@@ -9,10 +9,13 @@ import CreateSessionModel from '@/types/CreateSessionModel';
 import UserModel from '@/types/UserModel';
 import CreateSessionTaskModel from '@/types/CreateSessionTaskModel';
 import sessionTasksService from '@/services/SessionTasksService';
+import CastVoteForSessionModel from '@/types/CastVoteForSessionModel';
+import { joinSession } from '@/services/SignalRService';
 
 type StoreActionContext = ActionContext<StoreState, StoreState>;
 
 export interface Actions {
+  [ActionType.CAST_VOTE](context: StoreActionContext, payload: CastVoteForSessionModel): Promise<void>;
   [ActionType.CREATE_SESSION](context: StoreActionContext, payload: CreateSessionModel): Promise<void>;
   [ActionType.CREATE_SESSION_TASK](context: StoreActionContext, payload: CreateSessionTaskModel): Promise<void>;
   [ActionType.RETRIEVE_SESSION_BY_ID](context: StoreActionContext, sessionId: string): Promise<void>;
@@ -28,6 +31,17 @@ const executeApiRequest = async (context: StoreActionContext, loadingMutation: s
     context.commit(errorMutation, err);
   }
   context.commit(loadingMutation, false);
+}
+
+const castVote = async (context: StoreActionContext, payload: CastVoteForSessionModel): Promise<void> => {
+  await executeApiRequest(
+    context,
+    MutationType.SET_CREATE_SESSION_TASK_VOTE_LOADING,
+    MutationType.SET_CREATE_SESSION_TASK_VOTE_ERROR,
+    async () => {
+      await sessionsService.castVote(payload);
+    },
+  );
 }
 
 const createSession = async (context: StoreActionContext, payload: CreateSessionModel): Promise<void> => {
@@ -65,6 +79,7 @@ const retrieveSessionById = async (context: StoreActionContext, sessionId: strin
     async () => {
       const response = await sessionsService.retrieveById(sessionId);
       context.commit(MutationType.SET_CURRENT_SESSION, response);
+      await joinSession(response.id);
     },
   );
 }
@@ -75,6 +90,7 @@ const setUser = (context: StoreActionContext, payload: UserModel): void => {
 }
 
 const actions: ActionTree<StoreState, StoreState> & Actions = {
+  [ActionType.CAST_VOTE]: castVote,
   [ActionType.CREATE_SESSION]: createSession,
   [ActionType.CREATE_SESSION_TASK]: createSessionTask,
   [ActionType.RETRIEVE_SESSION_BY_ID]: retrieveSessionById,

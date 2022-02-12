@@ -16,6 +16,14 @@ export type Mutations<S = StoreState> = {
     state: S,
     value: boolean
   ): void;
+  [MutationType.SET_CREATE_SESSION_TASK_VOTE_ERROR](
+    state: S,
+    value: Error | null
+  ): void;
+  [MutationType.SET_CREATE_SESSION_TASK_VOTE_LOADING](
+    state: S,
+    value: boolean
+  ): void;
   [MutationType.SET_RETRIEVE_SESSION_ERROR](
     state: S,
     value: Error | null
@@ -55,6 +63,20 @@ const setCreateSessionTaskLoading = (
   state.createSessionTask.isLoading = value;
 };
 
+const setCreateSessionTaskVoteError = (
+  state: StoreState,
+  value: Error | null
+): void => {
+  state.currentSessionTaskVote.error = value;
+};
+
+const setCreateSessionTaskVoteLoading = (
+  state: StoreState,
+  value: boolean
+): void => {
+  state.currentSessionTaskVote.isLoading = value;
+};
+
 const setRetrieveSessionError = (
   state: StoreState,
   value: Error | null
@@ -90,6 +112,8 @@ const mutations: MutationTree<StoreState> & Mutations = {
   [MutationType.SET_CREATE_SESSION_LOADING]: setCreateSessionLoading,
   [MutationType.SET_CREATE_SESSION_TASK_ERROR]: setCreateSessionTaskError,
   [MutationType.SET_CREATE_SESSION_TASK_LOADING]: setCreateSessionTaskLoading,
+  [MutationType.SET_CREATE_SESSION_TASK_VOTE_ERROR]: setCreateSessionTaskVoteError,
+  [MutationType.SET_CREATE_SESSION_TASK_VOTE_LOADING]: setCreateSessionTaskVoteLoading,
   [MutationType.SET_RETRIEVE_SESSION_ERROR]: setRetrieveSessionError,
   [MutationType.SET_RETRIEVE_SESSION_LOADING]: setRetrieveSessionLoading,
   [MutationType.SET_CURRENT_SESSION]: setCurrentSession,

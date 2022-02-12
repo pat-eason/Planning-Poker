@@ -1,5 +1,6 @@
 import SessionEntity from "@/types/api/SessionEntity";
 import SessionTaskEntity from "@/types/api/SessionTaskEntity";
+import SessionTaskVoteEntity from '@/types/api/SessionTaskVoteEntity';
 
 type NullableEntity<T> = T | null;
 
@@ -22,10 +23,17 @@ export interface StoreStateUser {
   name: string;
 }
 
+export interface StoreSignalRSession {
+  task: any;
+  users: any[];
+  votes: any[];
+}
+
 export default interface StoreState {
   createSession: ApiTransactionType<SessionEntity>;
   createSessionTask: ApiTransactionType<SessionTaskEntity>;
   currentSession: ApiTransactionType<SessionEntity>;
   currentSessionTask: ApiTransactionType<SessionTaskEntity>;
+  currentSessionTaskVote: ApiTransactionType<SessionTaskVoteEntity>;
   user: StoreStateUser;
 }

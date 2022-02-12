@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PlanningPoker.Api.Hubs;
 using PlanningPoker.Api.Repository;
 using PlanningPoker.Core;
 using System.Text.Json.Serialization;
@@ -17,9 +18,11 @@ builder.Services.AddCors(options =>
         name: allowSpecificOrigins,
         builder => {
             builder.WithOrigins("https://localhost:8080")
+                .AllowCredentials()
                 .AllowAnyHeader();
         });
 });
+builder.Services.AddSignalR();
 
 // Add services to the container.
 builder.Services.AddScoped<ISessionsRepository, SessionsRepository>();
@@ -40,12 +43,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
+
 app.UseCors(allowSpecificOrigins);
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<SessionHub>("/sessionHub");
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
+});
 
 app.Run();

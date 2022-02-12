@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using PlanningPoker.Api.Hubs;
 using PlanningPoker.Api.Repository;
 using PlanningPoker.Api.ViewModels.Request;
 using PlanningPoker.Core.Entities;
@@ -10,17 +12,20 @@ namespace PlanningPoker.Api.Controllers
         private readonly ISessionsRepository _sessionsRepository;
         private readonly ISessionTasksRepository _sessionTasksRepository;
         private readonly ISessionTaskVotesRepository _sessionTaskVotesRepository;
+        private readonly IHubContext<SessionHub> _sessionHubContext;
 
         public SessionsController(
             ILogger<SessionsController> logger,
             ISessionsRepository sessionsRepository,
             ISessionTasksRepository sessionTasksRepository,
-            ISessionTaskVotesRepository sessionTaskVotesRepository
+            ISessionTaskVotesRepository sessionTaskVotesRepository,
+            IHubContext<SessionHub> sessionHubContext
         ) : base(logger)
         {
             _sessionsRepository = sessionsRepository;
             _sessionTasksRepository = sessionTasksRepository;
             _sessionTaskVotesRepository = sessionTaskVotesRepository;
+            _sessionHubContext = sessionHubContext;
         }
 
         [HttpGet]
@@ -76,19 +81,29 @@ namespace PlanningPoker.Api.Controllers
             var session = await _sessionsRepository.GetOneAsync(id);
             if (session == null)
             {
-                return NotFound();
+                return NotFound($"Could not find Session with Id [{id}]");
             }
 
             var currentSessionTask = await _sessionTasksRepository.GetCurrentTaskAsync(session);
             if (currentSessionTask == null)
             {
-                return NotFound("Could not find Task to cast Vote for");
+                return NotFound($"Could not find Task to cast Vote for Session with Id [{session.Id}]");
             }
 
-            await _sessionTaskVotesRepository.CreateOrUpdateVoteForSessionTask(
+            var sessionTaskVote = await _sessionTaskVotesRepository.CreateOrUpdateVoteForSessionTask(
                 currentSessionTask,
                 request.Email,
                 request.Value
+            );
+
+            await _sessionHubContext.Clients.Groups($"session_{session.Id}").SendAsync(
+                SessionHubEvents.RECEIVE_VOTE,
+                new
+                {
+                    CreatedBy = sessionTaskVote.CreatedBy,
+                    Id = sessionTaskVote.Id,
+                    Value = sessionTaskVote.Value
+                }
             );
 
             return NoContent();

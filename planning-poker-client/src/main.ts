@@ -8,6 +8,10 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 
+import { init } from '@/services/SignalRService';
+
+init();
+
 Vue.config.productionTip = false;
 
 for (const [rule, validation] of Object.entries(rules)) {

@@ -3,6 +3,8 @@ enum MutationType {
   SET_CREATE_SESSION_LOADING = "setCreateSessionLoading",
   SET_CREATE_SESSION_TASK_ERROR = "setCreateSessionTaskError",
   SET_CREATE_SESSION_TASK_LOADING = "setCreateSessionTaskLoading",
+  SET_CREATE_SESSION_TASK_VOTE_ERROR = "setCreateSessionTaskVoteError",
+  SET_CREATE_SESSION_TASK_VOTE_LOADING = "setCreateSessionTaskVoteLoading",
   SET_RETRIEVE_SESSION_ERROR = "setRetrieveSessionError",
   SET_RETRIEVE_SESSION_LOADING = "setRetrieveSessionLoading",
   SET_CURRENT_SESSION = "setCurrentSession",

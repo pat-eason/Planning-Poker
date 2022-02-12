@@ -42,7 +42,7 @@ namespace PlanningPoker.Api.Repository
                 sessionTaskVote = new SessionTaskVote();
             }
 
-            var isFreshEntity = await _dbContext.SessionTaskVotes.AnyAsync(x => x.Id == sessionTaskVote.Id);
+            var isFreshEntity = _dbContext.Entry(sessionTaskVote).State == EntityState.Detached;
             sessionTaskVote.UpdatedAt = DateTime.UtcNow;
             sessionTaskVote.Value = vote;
             if (isFreshEntity) {

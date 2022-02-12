@@ -10,15 +10,6 @@
     </v-sheet>
 
     <template v-if="currentSession">
-      <pre>
-        {{ currentSession }}
-      </pre>
-      <hr />
-
-      <pre>
-        {{ currentSessionTask }}
-      </pre>
-
       <v-row>
         <v-col>
           <v-card>
@@ -41,7 +32,7 @@
           <v-card v-if="currentSessionTask">
             <v-card-title> Cast your Vote </v-card-title>
             <v-card-text>
-              <CastVoteForm :sessionTaskId="currentSessionTask.id" @submit-form='createSessionTaskVote'/>
+              <CastVoteForm @cast-vote='createSessionTaskVote' />
             </v-card-text>
           </v-card>
         </v-col>
@@ -58,8 +49,10 @@ import CreateSessionTaskForm from "@/components/CreateSessionTaskForm.vue";
 import SessionEntity from "@/types/api/SessionEntity";
 import ActionType from "@/store/types/ActionType";
 import SessionTaskEntity from "@/types/api/SessionTaskEntity";
-import CastVoteForSessionTaskModel from "@/types/CastVoteForSessionTaskModel";
+import CastVoteForSessionModel from "@/types/CastVoteForSessionModel";
 import CreateSessionTaskModel from "@/types/CreateSessionTaskModel";
+import UserModel from '@/types/UserModel';
+import { joinSession } from '@/services/SignalRService';
 
 @Component({
   components: {
@@ -93,6 +86,10 @@ export default class SessionView extends Vue {
     return this.$store.state.currentSessionTask.data;
   }
 
+  get currentUser(): UserModel {
+    return this.$store.state.user;
+  }
+
   backToHome(): void {
     this.$router.replace({ name: "Home" });
   }
@@ -101,10 +98,16 @@ export default class SessionView extends Vue {
     await this.$store.dispatch(ActionType.CREATE_SESSION_TASK, model);
   }
 
-  async createSessionTaskVote(
-    model: CastVoteForSessionTaskModel
-  ): Promise<void> {
-    console.log('createSessionTaskVote', model);
+  async createSessionTaskVote(vote: number): Promise<void> {
+    if (!this.currentSession) {
+      return;
+    }
+    const payload: CastVoteForSessionModel = {
+      email: this.currentUser.email,
+      sessionId: this.currentSession.id,
+      vote,
+    }
+    this.$store.dispatch(ActionType.CAST_VOTE, payload);
   }
 
   async retrieveSession(): Promise<void> {

@@ -14,7 +14,7 @@ namespace PlanningPoker.Core.Entities
 
         public bool IsCompleted { get; set; }
 
-        public DateTimeOffset CompletedAt { get; set; }
+        public DateTimeOffset? CompletedAt { get; set; }
 
         public Guid SessionId { get; set; }
         public virtual Session Session { get; set; }

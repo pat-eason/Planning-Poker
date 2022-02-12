@@ -1,4 +1,5 @@
 enum ActionType {
+  CAST_VOTE = "castVote",
   CREATE_SESSION = "createSession",
   CREATE_SESSION_TASK = "createSessionTask",
   RETRIEVE_SESSION_BY_ID = "retrieveSessionById",
